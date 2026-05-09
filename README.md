@@ -200,11 +200,11 @@ kubectl apply -f k8s/ingress/
 vault auth enable approle
 
 # Apply policies
-vault policy write service-a vault/policies/service-a.hcl
+vault policy write microservices-policy vault/policies/all-services.hcl
 
-# Create AppRole per service
+# Create AppRole per service (all sharing the same policy)
 vault write auth/approle/role/service-a \
-  token_policies="service-a" \
+  token_policies="microservices-policy" \
   token_ttl=1h \
   token_max_ttl=4h
 ```
