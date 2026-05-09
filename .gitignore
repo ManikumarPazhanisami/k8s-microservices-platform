@@ -24,6 +24,7 @@ secret-id
 # OS
 .DS_Store
 Thumbs.db
+*:Zone.Identifier
 
 # Logs
 *.log
