@@ -1,0 +1,46 @@
+## PersistentVolume - Local Storage
+## nodeAffinity ensures pod always schedules on the node where data lives
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: service-a-pv
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /data/service-a        # Physical path on node
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - <YOUR_NODE_NAME>   # Pin to specific node
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: service-a-pvc
+  namespace: backend
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-storage
+  resources:
+    requests:
+      storage: 10Gi
+---
+## StorageClass for local storage
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner   # Manual provisioning for on-prem
+volumeBindingMode: WaitForFirstConsumer     # Delay binding until pod is scheduled
+reclaimPolicy: Retain

@@ -1,0 +1,30 @@
+# Secrets - NEVER commit these
+*.env
+.env.*
+secrets/
+kubeconfig
+*.kubeconfig
+vault-token
+role-id
+secret-id
+*.pem
+*.key
+*.crt
+
+# Real manifest overrides with actual values
+*-production.yaml
+*-prod.yaml
+*-override.yaml
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
