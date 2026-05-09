@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-a
+  namespace: backend
+spec:
+  selector:
+    app: service-a
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-b
+  namespace: backend
+spec:
+  selector:
+    app: service-b
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-c
+  namespace: backend
+spec:
+  selector:
+    app: service-c
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-d
+  namespace: workers
+spec:
+  selector:
+    app: service-d
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-e
+  namespace: frontend
+spec:
+  selector:
+    app: service-e
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP

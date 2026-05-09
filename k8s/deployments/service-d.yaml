@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-d
+  namespace: workers
+  labels:
+    app: service-d
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-d
+  template:
+    metadata:
+      labels:
+        app: service-d
+    spec:
+      initContainers:
+        - name: vault-init
+          image: vault:latest
+          command:
+            - sh
+            - -c
+            - |
+              vault unwrap -address=http://<VAULT_ADDRESS>:8200 $VAULT_WRAP_TOKEN \
+                | jq -r '.data.secret_id' > /vault/secret-id
+          env:
+            - name: VAULT_WRAP_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: vault-wrap-token
+                  key: token
+          volumeMounts:
+            - name: vault-secrets
+              mountPath: /vault
+      containers:
+        - name: service-d
+          image: <YOUR_REGISTRY>/service-d:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: VAULT_ADDR
+              value: "http://<VAULT_ADDRESS>:8200"
+            - name: VAULT_ROLE_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: vault-config
+                  key: role-id
+          volumeMounts:
+            - name: vault-secrets
+              mountPath: /vault
+      volumes:
+        - name: vault-secrets
+          emptyDir: {}

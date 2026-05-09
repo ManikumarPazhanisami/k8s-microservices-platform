@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-c
+  namespace: backend
+  labels:
+    app: service-c
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: service-c
+  template:
+    metadata:
+      labels:
+        app: service-c
+    spec:
+      initContainers:
+        - name: vault-init
+          image: vault:latest
+          command:
+            - sh
+            - -c
+            - |
+              vault unwrap -address=http://<VAULT_ADDRESS>:8200 $VAULT_WRAP_TOKEN \
+                | jq -r '.data.secret_id' > /vault/secret-id
+          env:
+            - name: VAULT_WRAP_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: vault-wrap-token
+                  key: token
+          volumeMounts:
+            - name: vault-secrets
+              mountPath: /vault
+      containers:
+        - name: service-c
+          image: <YOUR_REGISTRY>/service-c:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: VAULT_ADDR
+              value: "http://<VAULT_ADDRESS>:8200"
+            - name: VAULT_ROLE_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: vault-config
+                  key: role-id
+          volumeMounts:
+            - name: vault-secrets
+              mountPath: /vault
+            - name: service-c-storage
+              mountPath: /data
+      volumes:
+        - name: vault-secrets
+          emptyDir: {}
+        - name: service-c-storage
+          persistentVolumeClaim:
+            claimName: service-c-pvc
