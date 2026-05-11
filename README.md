@@ -10,23 +10,23 @@ A production-grade microservices architecture deployed on bare-metal Kubernetes 
 ┌─────────────────────────────────────────────────────────────┐
 │                     On-Premise Infrastructure               │
 │                                                             │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │              Kubernetes Cluster (Single)              │  │
-│  │                                                       │  │
-│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  │  │
-│  │  │  namespace  │  │  namespace  │  │  namespace  │  │  │
-│  │  │  frontend   │  │  backend    │  │   workers   │  │  │
-│  │  └─────────────┘  └─────────────┘  └─────────────┘  │  │
-│  │                                                       │  │
-│  │              CNI (Pod-to-Pod Networking)              │  │
-│  │              Nginx Ingress Controller                 │  │
-│  │              PersistentVolumes (Local Storage)        │  │
-│  └──────────────────────────────────────────────────────┘  │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │              Kubernetes Cluster (Single)             │   │
+│  │                                                      │   │
+│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐   │   │
+│  │  │  namespace  │  │  namespace  │  │  namespace  │   │   │
+│  │  │  frontend   │  │  backend    │  │   workers   │   │   │
+│  │  └─────────────┘  └─────────────┘  └─────────────┘   │   │
+│  │                                                      │   │
+│  │              CNI (Pod-to-Pod Networking)             │   │
+│  │              Nginx Ingress Controller                │   │
+│  │              PersistentVolumes (Local Storage)       │   │
+│  └──────────────────────────────────────────────────────┘   │
 │                                                             │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │            HashiCorp Vault (Separate Server)          │  │
-│  │            AppRole Auth + Per-Service Policies        │  │
-│  └──────────────────────────────────────────────────────┘  │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │            HashiCorp Vault (Separate Server)         │   │
+│  │            AppRole Auth + Per-Service Policies       │   │
+│  └──────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
                               │
                     Secured HTTP Endpoints
